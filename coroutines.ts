@@ -7,9 +7,19 @@
  */
 export class Coroutines {
     private coroutines : Iterator<any>[] = []
-    active = true
     
-    constructor(public readonly name = generateNewName()) {
+    /**
+     * Set to `false` to exit a [[startTicking]] loop
+     */
+    public active = true
+
+    /**
+     * For debugging
+     */
+    public readonly name : string;
+    
+    constructor(name = generateNewName()) {
+        this.name = name;
     }
 
     /**
@@ -81,7 +91,7 @@ export class Coroutines {
      * 
      * @param scheduleFunction defaults to
      * [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
-     * in a browser and [process.nextTick](https://nodejs.org/api/process.html#process_process_nexttick_callback_args) in node.
+     * in a browser and [setImmediate](https://developer.mozilla.org/en-US/docs/Web/API/Window/setImmediate) otherwise.
      */
     public startTicking(scheduleFunction:Function=_scheduleFunction) {
         let runCoroutines = () => {
@@ -95,7 +105,7 @@ export class Coroutines {
 
 let generateNewName = () => Math.random().toString(36).replace("0.", "Coroutines.")
 
-let _scheduleFunction = typeof window === "undefined" ? process.nextTick : requestAnimationFrame
+let _scheduleFunction = typeof window === "undefined" ? setImmediate : requestAnimationFrame
 
 if(typeof window === "undefined") {
     global["performance"] = require("perf_hooks").performance;
@@ -175,26 +185,29 @@ export function* waitWhile(f: () => boolean) {
  * 
  * @category Coroutine
  * 
+ * 
  * @param obj The object to mutate
  * @param prop The property on `obj` to mutate
  * @param to The final value of `obj.prop`
- * @param options.map A function to shape the animation curve.
- * @param options.map.x A value between 0 and 1
- * @param options.clock b
- * @param options.interpolate c
- * @param options.interpolate.a d
- * @param options.interpolate.b e
- * @param options.interpolate.t f
+ * @param map A function to shape the animation curve. Given a value between 0 and 1 returns a value between 0 and 1. Defaults to the identity function (no shaping).
+ * @param map.x A value between 0 and 1
+ * @param clock The clock function used to measure time. Defaults to the function set by [[setClock]]
+ * @param interpolate Interpolating function. Given values `a` and `b` returns their interpolated value at `t`, a number between 0 and 1. Defaults to linear interpolation.
+ * @param interpolate.a The starting value
+ * @param interpolate.b The final value
+ * @param interpolate.t The interpolation value, a number between 0 and 1
+ * @todo needs way to specify animation speed or time
+ * @see [[setClock]]
  */
-export function* animate(obj: any, prop: string, to:any, options = { clock: _clock, map: (x:number) => x, interpolate: (a, b, t) => b * t + a * (1 - t) } ) {
+export function* animate(obj: any, prop: string, to:any, { clock = _clock, map = (x:number) => x, interpolate = (a:any, b:any, t:number) => b * t + a * (1 - t) } ) {
     let from = obj[prop];
     let t = 0
-    let lastTime = _clock()
+    let lastTime = clock()
     while(t < 1) {
-        let nowTime = _clock()
+        let nowTime = clock()
         let delta = nowTime - lastTime
         lastTime = nowTime
-        obj[prop] = options.interpolate(from, to, options.map(t))
+        obj[prop] = interpolate(from, to, map(t))
         t += delta
         yield;
     }
