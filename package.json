@@ -22,11 +22,13 @@
     "url": "https://github.com/nasser/ajeeb-coroutines/issues"
   },
   "homepage": "https://github.com/nasser/ajeeb-coroutines#readme",
-  "dependencies": {
-    "@types/node": "^12.7.1",
-    "typescript": "~3.5.3"
-  },
   "devDependencies": {
-    "typedoc": "~0.15.0"
+    "@types/node": "^12.7.1",
+    "typescript": "~3.5.3",
+    "tslib": "1.10.0",
+    "typedoc": "~0.15.0",
+    "rollup": "^1.19.4",
+    "rollup-plugin-typescript": "1.0.1",
+    "rollup-plugin-sourcemaps": "0.4.2"
   }
 }
