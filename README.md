@@ -6,6 +6,14 @@ Ajeeb Coroutines are a TypeScript implementation of [a similar idea][unicoro] fr
 They use [ES6 generators][es6gen] to turn code that *reads sequentially* into code that *runs across multiple frames*.
 They were designed for the [Ajeeb Game Engine][ajeeb] but have no dependencies and can be used anywhere.
 
+## Installation
+
+```
+npm install nasser/ajeeb-coroutines
+```
+
+## Usage
+
 An instance of an ES6 generator is treated as [*a coroutine*][wikicoro]. An instance of the [[Coroutines]] class schedules and runs coroutines.
 
 [[Coroutines.start]] adds a couroutine to the collection. [[Coroutines.tick]] runs every coroutine in the collection up to their next [yield][yielddoc]
