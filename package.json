@@ -1,0 +1,32 @@
+{
+  "name": "ajeeb-coroutines",
+  "version": "0.1.0",
+  "description": "A couroutine implementation based on ES6 generators",
+  "main": "coroutines.js",
+  "scripts": {
+    "build": "npx tsc",
+    "build-docs": "npx typedoc --mode file"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nasser/ajeeb-coroutines.git"
+  },
+  "keywords": [
+    "games",
+    "generators",
+    "coroutines"
+  ],
+  "author": "Ramsey Nasser",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nasser/ajeeb-coroutines/issues"
+  },
+  "homepage": "https://github.com/nasser/ajeeb-coroutines#readme",
+  "dependencies": {
+    "@types/node": "^12.7.1",
+    "typescript": "~3.5.3"
+  },
+  "devDependencies": {
+    "typedoc": "~0.15.0"
+  }
+}
