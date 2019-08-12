@@ -5,7 +5,7 @@ export default {
     input: './coroutines.ts',
     output: {
         name: "coroutines",
-        file: "./browser.js",
+        file: "build/browser.js",
         format: "iife",
         sourcemap: true
     },
