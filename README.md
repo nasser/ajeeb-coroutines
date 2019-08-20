@@ -29,7 +29,7 @@ coro.start(function* () {
     yield;                // waits one frame
     console.log("world")  // prints world
     yield; yield;         // waits two frames
-    console.log("!!!")    // prints world
+    console.log("!!!")    // prints !!!
 })
 
 coro.tick()
