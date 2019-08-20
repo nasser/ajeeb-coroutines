@@ -220,3 +220,66 @@ export function* animate(obj: any, prop: string, to:any, { clock = _clock, map =
         yield;
     }
 }
+
+/**
+ * @hidden
+ */
+let advance = (c:Iterator<any>) => c.next()
+
+/**
+ * @hidden
+ */
+let initialize = (c:(Iterator<any>|(()=>Iterator<any>))) => typeof c === "function" ? c() : c
+
+/**
+ * @category Combinator
+ * @param coros Coroutines
+ */
+export function* waitLast(coros:Iterator<any>[]) {
+    let results = coros.map(advance)
+    while(results.filter(r => r.done).length !== coros.length) {
+      yield;
+      for (var i = 0; i < coros.length; i++) {
+        let coro = coros[i]
+        let res = results[i]
+        if(!res.done) {
+          results[i] = advance(coro)
+        }
+      }
+    }
+  }
+  
+  /**
+   * @category Combinator
+   * @param coros Coroutines
+   */
+  export function* waitFirst(coros:Iterator<any>[]) {
+    let results = coros.map(advance)
+    while(results.filter(r => r.done).length === 0) {
+      yield;
+      for (var i = 0; i < coros.length; i++) {
+        let coro = coros[i]
+        let res = results[i]
+        if(!res.done) {
+          results[i] = advance(coro) 
+        }
+      }
+    }
+  }
+
+  /**
+   * @category Combinator
+   * @param coros Coroutines
+   */
+export function* sequence(coros:(Iterator<any>|(()=>Iterator<any>))[]) {
+    if(coros.length == 0) return;
+    for (let i = 0; i < coros.length; i++) {
+        const gen = initialize(coros[i]);
+        let res = gen.next()
+        yield;
+        while(!res.done) {
+            res = gen.next()
+            yield;
+        }
+    }
+  }

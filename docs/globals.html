@@ -2384,13 +2384,22 @@ img {
 			<a href="globals.html#animate" class="tsd-kind-icon">animate</a>
 		</li>
 		<li class=" tsd-kind-function">
+			<a href="globals.html#sequence" class="tsd-kind-icon">sequence</a>
+		</li>
+		<li class=" tsd-kind-function">
 			<a href="globals.html#setclock" class="tsd-kind-icon">set<wbr>Clock</a>
 		</li>
 		<li class=" tsd-kind-function">
 			<a href="globals.html#wait" class="tsd-kind-icon">wait</a>
 		</li>
 		<li class=" tsd-kind-function">
+			<a href="globals.html#waitfirst" class="tsd-kind-icon">wait<wbr>First</a>
+		</li>
+		<li class=" tsd-kind-function">
 			<a href="globals.html#waitframes" class="tsd-kind-icon">wait<wbr>Frames</a>
+		</li>
+		<li class=" tsd-kind-function">
+			<a href="globals.html#waitlast" class="tsd-kind-icon">wait<wbr>Last</a>
 		</li>
 		<li class=" tsd-kind-function">
 			<a href="globals.html#waituntil" class="tsd-kind-icon">wait<wbr>Until</a>
@@ -2424,7 +2433,7 @@ img {
 
 <span class="hljs-keyword">let</span> coro = <span class="hljs-keyword">new</span> Coroutines()
 
-coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>{
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"hello"</span>)  <span class="hljs-comment">// prints hello</span>
     <span class="hljs-keyword">yield</span>;                <span class="hljs-comment">// waits one frame</span>
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"world"</span>)  <span class="hljs-comment">// prints world</span>
@@ -2494,6 +2503,12 @@ coro.startTicking()</code></pre>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
+						<h3>Combinator Functions</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-function"><a href="globals.html#sequence" class="tsd-kind-icon">sequence</a></li>
+							<li class="tsd-kind-function"><a href="globals.html#waitfirst" class="tsd-kind-icon">wait<wbr>First</a></li>
+							<li class="tsd-kind-function"><a href="globals.html#waitlast" class="tsd-kind-icon">wait<wbr>Last</a></li>
+						</ul>
 						<h3>Coroutine Functions</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-function"><a href="globals.html#animate" class="tsd-kind-icon">animate</a></li>
@@ -2511,6 +2526,93 @@ coro.startTicking()</code></pre>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Combinator Functions</h2>
+			<section class="tsd-panel tsd-member tsd-kind-function">
+				<a name="sequence" class="tsd-anchor"></a>
+				<h3>sequence</h3>
+				<ul class="tsd-signatures tsd-kind-function">
+					<li class="tsd-signature tsd-kind-icon">sequence<span class="tsd-signature-symbol">(</span>coros<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/80cec0c/coroutines.ts#L274">coroutines.ts:274</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>coros: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Coroutines</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function">
+				<a name="waitfirst" class="tsd-anchor"></a>
+				<h3>wait<wbr>First</h3>
+				<ul class="tsd-signatures tsd-kind-function">
+					<li class="tsd-signature tsd-kind-icon">wait<wbr>First<span class="tsd-signature-symbol">(</span>coros<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/80cec0c/coroutines.ts#L256">coroutines.ts:256</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>coros: <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Coroutines</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function">
+				<a name="waitlast" class="tsd-anchor"></a>
+				<h3>wait<wbr>Last</h3>
+				<ul class="tsd-signatures tsd-kind-function">
+					<li class="tsd-signature tsd-kind-icon">wait<wbr>Last<span class="tsd-signature-symbol">(</span>coros<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/80cec0c/coroutines.ts#L238">coroutines.ts:238</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>coros: <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Coroutines</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Coroutine Functions</h2>
 			<section class="tsd-panel tsd-member tsd-kind-function">
 				<a name="animate" class="tsd-anchor"></a>
@@ -2522,7 +2624,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/1edfbcf/coroutines.ts#L210">coroutines.ts:210</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/80cec0c/coroutines.ts#L210">coroutines.ts:210</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2576,7 +2678,7 @@ coro.startTicking()</code></pre>
 											<li class="tsd-description">
 												<aside class="tsd-sources">
 													<ul>
-														<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/1edfbcf/coroutines.ts#L210">coroutines.ts:210</a></li>
+														<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/80cec0c/coroutines.ts#L210">coroutines.ts:210</a></li>
 													</ul>
 												</aside>
 												<div class="tsd-comment tsd-typography">
@@ -2615,7 +2717,7 @@ coro.startTicking()</code></pre>
 											<li class="tsd-description">
 												<aside class="tsd-sources">
 													<ul>
-														<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/1edfbcf/coroutines.ts#L210">coroutines.ts:210</a></li>
+														<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/80cec0c/coroutines.ts#L210">coroutines.ts:210</a></li>
 													</ul>
 												</aside>
 												<div class="tsd-comment tsd-typography">
@@ -2650,7 +2752,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/1edfbcf/coroutines.ts#L145">coroutines.ts:145</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/80cec0c/coroutines.ts#L145">coroutines.ts:145</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2692,7 +2794,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/1edfbcf/coroutines.ts#L159">coroutines.ts:159</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/80cec0c/coroutines.ts#L159">coroutines.ts:159</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2723,7 +2825,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/1edfbcf/coroutines.ts#L172">coroutines.ts:172</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/80cec0c/coroutines.ts#L172">coroutines.ts:172</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2766,7 +2868,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/1edfbcf/coroutines.ts#L185">coroutines.ts:185</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/80cec0c/coroutines.ts#L185">coroutines.ts:185</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2812,7 +2914,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/1edfbcf/coroutines.ts#L132">coroutines.ts:132</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/80cec0c/coroutines.ts#L132">coroutines.ts:132</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">

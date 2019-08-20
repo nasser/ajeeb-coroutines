@@ -89,11 +89,20 @@ class Coroutines {
         runCoroutines();
     }
 }
+/**
+ * @hidden until typedoc can check "only exported" by default
+ */
 let generateNewName = () => Math.random().toString(36).replace("0.", "Coroutines.");
+/**
+ * @hidden until typedoc can check "only exported" by default
+ */
 let _scheduleFunction = typeof window === "undefined" ? setImmediate : requestAnimationFrame;
 if (typeof window === "undefined") {
     global["performance"] = require("perf_hooks").performance;
 }
+/**
+ * @hidden until typedoc can check "only exported" by default
+ */
 let _clock = () => performance.now() / 1000;
 /**
  * Sets a new clock function.
@@ -189,6 +198,65 @@ function* animate(obj, prop, to, { clock = _clock, map = (x) => x, interpolate =
         yield;
     }
 }
+/**
+ * @hidden
+ */
+let advance = (c) => c.next();
+/**
+ * @hidden
+ */
+let initialize = (c) => typeof c === "function" ? c() : c;
+/**
+ * @category Combinator
+ * @param coros Coroutines
+ */
+function* waitLast(coros) {
+    let results = coros.map(advance);
+    while (results.filter(r => r.done).length !== coros.length) {
+        yield;
+        for (var i = 0; i < coros.length; i++) {
+            let coro = coros[i];
+            let res = results[i];
+            if (!res.done) {
+                results[i] = advance(coro);
+            }
+        }
+    }
+}
+/**
+ * @category Combinator
+ * @param coros Coroutines
+ */
+function* waitFirst(coros) {
+    let results = coros.map(advance);
+    while (results.filter(r => r.done).length === 0) {
+        yield;
+        for (var i = 0; i < coros.length; i++) {
+            let coro = coros[i];
+            let res = results[i];
+            if (!res.done) {
+                results[i] = advance(coro);
+            }
+        }
+    }
+}
+/**
+ * @category Combinator
+ * @param coros Coroutines
+ */
+function* sequence(coros) {
+    if (coros.length == 0)
+        return;
+    for (let i = 0; i < coros.length; i++) {
+        const gen = initialize(coros[i]);
+        let res = gen.next();
+        yield;
+        while (!res.done) {
+            res = gen.next();
+            yield;
+        }
+    }
+}
 
-export { Coroutines, animate, setClock, wait, waitFrames, waitUntil, waitWhile };
+export { Coroutines, animate, sequence, setClock, wait, waitFirst, waitFrames, waitLast, waitUntil, waitWhile };
 //# sourceMappingURL=coroutines.esm.js.map
