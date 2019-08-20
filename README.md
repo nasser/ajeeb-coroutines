@@ -43,11 +43,16 @@ coro.tick()
 // further calls to coro.tick() will do nothing
 ```
 
-Coroutines become powerful when combined with other coroutines. [[Coroutines.startTicking]] will schedule [[tick]] to be
-called once per frame, advancing every coroutine in the collection automatically. This library also exports a number of
-generically useful coroutines, like [[wait]]. A coroutine can be made to wait for another coroutine with the
-[yield*][yieldstar] statement. If [yield][yielddoc] is read as "wait one frame" [yield*][yieldstar] is read as "wait
-until this other coroutine completes"
+Coroutines are designed to run across multiple frames. [[tick]] can be scheduled
+to run regularly using [requestAnimationFrame][raf] or [setInterval][si] in the
+browser or node respectively, advancing every coroutine in the collection
+automatically once per frame.
+
+This library also exports a number of generically useful coroutines, like [[wait]],
+that can be combined with your own in powerful ways. A coroutine can be made to
+wait for another coroutine with the [yield*][yieldstar] statement. If
+[yield][yielddoc] is read as "wait one frame" [yield*][yieldstar] is read as
+"wait until this other coroutine completes"
 
 ```js
 import { Coroutines, wait } from "ajeeb-coroutines"
@@ -55,9 +60,17 @@ import { Coroutines, wait } from "ajeeb-coroutines"
 let coro = new Coroutines()
 
 // schedule coroutines to tick every frame
-coro.startTicking()
+// in the browser
+function runCoroutines() {
+    requestAnimationFrame( runCoroutines )
+    coro.tick()
+}
+runCoroutines()
 
-// you can start coroutines after startTicking
+// in node
+setInterval(() => coro.tick(), 1000/60)
+
+// you can start coroutines after 
 coro.start(function* () {
     console.log("hello")  // prints "hello"
     yield* wait(2)        // wait for 2 seconds
@@ -89,7 +102,15 @@ function* waitForFile(path) {
 
 coro.start(waitForFile("nice.txt"))
 
-coro.startTicking()
+// in the browser
+function runCoroutines() {
+    requestAnimationFrame( runCoroutines )
+    coro.tick()
+}
+runCoroutines()
+
+// in node
+setInterval(() => coro.tick(), 1000/60)
 ```
 
 [es6gen]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator
@@ -99,3 +120,5 @@ coro.startTicking()
 [unity]: https://www.unity3d.com/
 [unicoro]: https://docs.unity3d.com/Manual/Coroutines.html
 [wikicoro]: https://en.wikipedia.org/wiki/Coroutine
+[raf]: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
+[si]: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval

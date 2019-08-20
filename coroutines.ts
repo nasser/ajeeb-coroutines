@@ -7,12 +7,6 @@
  */
 export class Coroutines {
     private coroutines : Iterator<any>[] = []
-    
-    /**
-     * Set to `false` to exit a [[startTicking]] loop
-     */
-    public active = true
-
     /**
      * For debugging
      */
@@ -78,39 +72,11 @@ export class Coroutines {
         this.coroutines.splice(this.coroutines.indexOf(x), 1)
       }
     }
-
-    /**
-     * Start running coroutines every frame.
-     * 
-     * Calls [[tick]] every "frame" as long as [[active]] is true.
-     * 
-     * The meaning of "a frame" depends on the scheduling function. In a browser, requestAnimationFrame is the default 
-     * and a frame happens every 1/60 seconds or 16.6ms or 60Hz. In node, process.nextTick is the default and a frame
-     * happens every iteration of the event loop, which is typically much faster than 1/60 seconds. Coroutines that
-     * measure physical time are not affected by this difference.
-     * 
-     * @param scheduleFunction defaults to
-     * [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
-     * in a browser and [setImmediate](https://developer.mozilla.org/en-US/docs/Web/API/Window/setImmediate) otherwise.
-     */
-    public startTicking(scheduleFunction:Function=_scheduleFunction) {
-        let runCoroutines = () => {
-            this.tick()
-            if(this.active)
-                scheduleFunction(runCoroutines)
-        }
-        runCoroutines()
-    }
 }
 /**
  * @hidden until typedoc can check "only exported" by default
  */
 let generateNewName = () => Math.random().toString(36).replace("0.", "Coroutines.")
-
-/**
- * @hidden until typedoc can check "only exported" by default
- */
-let _scheduleFunction = typeof window === "undefined" ? setImmediate : requestAnimationFrame
 
 if(typeof window === "undefined") {
     global["performance"] = require("perf_hooks").performance;
