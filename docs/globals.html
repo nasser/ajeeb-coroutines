@@ -2450,19 +2450,31 @@ coro.tick()
 coro.tick()
 <span class="hljs-comment">// prints "!!!"</span>
 <span class="hljs-comment">// further calls to coro.tick() will do nothing</span></code></pre>
-			<p>Coroutines become powerful when combined with other coroutines. <a href="classes/coroutines.html#startticking">Coroutines.startTicking</a> will schedule <a href="classes/coroutines.html#tick">tick</a> to be
-				called once per frame, advancing every coroutine in the collection automatically. This library also exports a number of
-				generically useful coroutines, like <a href="globals.html#wait">wait</a>. A coroutine can be made to wait for another coroutine with the
-				<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield*">yield*</a> statement. If <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a> is read as &quot;wait one frame&quot; <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield*">yield*</a> is read as &quot;wait
-			until this other coroutine completes&quot;</p>
+			<p>Coroutines are designed to run across multiple frames. <a href="classes/coroutines.html#tick">tick</a> can be scheduled
+				to run regularly using <a href="https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame">requestAnimationFrame</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval">setInterval</a> in the
+				browser or node respectively, advancing every coroutine in the collection
+			automatically once per frame.</p>
+			<p>This library also exports a number of generically useful coroutines, like <a href="globals.html#wait">wait</a>,
+				that can be combined with your own in powerful ways. A coroutine can be made to
+				wait for another coroutine with the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield*">yield*</a> statement. If
+				<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a> is read as &quot;wait one frame&quot; <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield*">yield*</a> is read as
+			&quot;wait until this other coroutine completes&quot;</p>
 			<pre><code class="language-js"><span class="hljs-keyword">import</span> { Coroutines, wait } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
 
 <span class="hljs-keyword">let</span> coro = <span class="hljs-keyword">new</span> Coroutines()
 
 <span class="hljs-comment">// schedule coroutines to tick every frame</span>
-coro.startTicking()
+<span class="hljs-comment">// in the browser</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">runCoroutines</span>(<span class="hljs-params"></span>) </span>{
+    requestAnimationFrame( runCoroutines )
+    coro.tick()
+}
+runCoroutines()
 
-<span class="hljs-comment">// you can start coroutines after startTicking</span>
+<span class="hljs-comment">// in node</span>
+setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> coro.tick(), <span class="hljs-number">1000</span>/<span class="hljs-number">60</span>)
+
+<span class="hljs-comment">// you can start coroutines after </span>
 coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>{
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"hello"</span>)  <span class="hljs-comment">// prints "hello"</span>
     <span class="hljs-keyword">yield</span>* wait(<span class="hljs-number">2</span>)        <span class="hljs-comment">// wait for 2 seconds</span>
@@ -2490,7 +2502,15 @@ coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span
 
 coro.start(waitForFile(<span class="hljs-string">"nice.txt"</span>))
 
-coro.startTicking()</code></pre>
+<span class="hljs-comment">// in the browser</span>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">runCoroutines</span>(<span class="hljs-params"></span>) </span>{
+    requestAnimationFrame( runCoroutines )
+    coro.tick()
+}
+runCoroutines()
+
+<span class="hljs-comment">// in node</span>
+setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> coro.tick(), <span class="hljs-number">1000</span>/<span class="hljs-number">60</span>)</code></pre>
 		</div>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
@@ -2537,7 +2557,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7668faa/coroutines.ts#L274">coroutines.ts:274</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L240">coroutines.ts:240</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2565,7 +2585,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7668faa/coroutines.ts#L256">coroutines.ts:256</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L222">coroutines.ts:222</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2593,7 +2613,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7668faa/coroutines.ts#L238">coroutines.ts:238</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L204">coroutines.ts:204</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2624,7 +2644,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7668faa/coroutines.ts#L210">coroutines.ts:210</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L176">coroutines.ts:176</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2678,7 +2698,7 @@ coro.startTicking()</code></pre>
 											<li class="tsd-description">
 												<aside class="tsd-sources">
 													<ul>
-														<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7668faa/coroutines.ts#L210">coroutines.ts:210</a></li>
+														<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L176">coroutines.ts:176</a></li>
 													</ul>
 												</aside>
 												<div class="tsd-comment tsd-typography">
@@ -2717,7 +2737,7 @@ coro.startTicking()</code></pre>
 											<li class="tsd-description">
 												<aside class="tsd-sources">
 													<ul>
-														<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7668faa/coroutines.ts#L210">coroutines.ts:210</a></li>
+														<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L176">coroutines.ts:176</a></li>
 													</ul>
 												</aside>
 												<div class="tsd-comment tsd-typography">
@@ -2752,7 +2772,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7668faa/coroutines.ts#L145">coroutines.ts:145</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L111">coroutines.ts:111</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2794,7 +2814,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7668faa/coroutines.ts#L159">coroutines.ts:159</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L125">coroutines.ts:125</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2825,7 +2845,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7668faa/coroutines.ts#L172">coroutines.ts:172</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L138">coroutines.ts:138</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2868,7 +2888,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7668faa/coroutines.ts#L185">coroutines.ts:185</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L151">coroutines.ts:151</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2914,7 +2934,7 @@ coro.startTicking()</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7668faa/coroutines.ts#L132">coroutines.ts:132</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L98">coroutines.ts:98</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
