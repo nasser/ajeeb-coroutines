@@ -102,15 +102,23 @@ export class Coroutines {
         runCoroutines()
     }
 }
-
+/**
+ * @hidden until typedoc can check "only exported" by default
+ */
 let generateNewName = () => Math.random().toString(36).replace("0.", "Coroutines.")
 
+/**
+ * @hidden until typedoc can check "only exported" by default
+ */
 let _scheduleFunction = typeof window === "undefined" ? setImmediate : requestAnimationFrame
 
 if(typeof window === "undefined") {
     global["performance"] = require("perf_hooks").performance;
 }
 
+/**
+ * @hidden until typedoc can check "only exported" by default
+ */
 let _clock = () => performance.now() / 1000
 
 /**
