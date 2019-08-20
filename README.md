@@ -24,7 +24,7 @@ import { Coroutines } from "ajeeb-coroutines"
 
 let coro = new Coroutines()
 
-coro.start(function() {
+coro.start(function* () {
     console.log("hello")  // prints hello
     yield;                // waits one frame
     console.log("world")  // prints world
