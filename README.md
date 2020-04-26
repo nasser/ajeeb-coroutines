@@ -2,9 +2,11 @@
 
 Unity-inspired Coroutines for the browser and nodejs.
 
-Ajeeb Coroutines are a TypeScript implementation of [a similar idea][unicoro] from [the Unity 3D engine][unity].
-They use [ES6 generators][es6gen] to turn code that *reads sequentially* into code that *runs across multiple frames*.
-They were designed for the [Ajeeb Game Engine][ajeeb] but have no dependencies and can be used anywhere.
+Ajeeb Coroutines are a TypeScript implementation of [a similar idea][unicoro]
+from [the Unity 3D engine][unity]. They use [ES6 generators][es6gen] to turn
+code that *reads sequentially* into code that *runs across multiple frames*.
+They were designed for the [Ajeeb Game Engine][ajeeb] but have no dependencies
+and can be used anywhere.
 
 ## Installation
 
@@ -12,12 +14,22 @@ They were designed for the [Ajeeb Game Engine][ajeeb] but have no dependencies a
 npm install nasser/ajeeb-coroutines
 ```
 
+Or in a browser you can link to the CDN
+
+```
+<script src="https://cdn.jsdelivr.net/gh/nasser/ajeeb-coroutines@master/build/coroutines.iife.js"></script>
+```
+
 ## Usage
 
-An instance of an ES6 generator is treated as [*a coroutine*][wikicoro]. An instance of the [[Coroutines]] class schedules and runs coroutines.
+An instance of an ES6 generator is treated as [*a coroutine*][wikicoro]. An
+instance of the [[Coroutines]] class schedules and runs coroutines.
 
-[[Coroutines.start]] adds a couroutine to the collection. [[Coroutines.tick]] runs every coroutine in the collection up to their next [yield][yielddoc]
-statement. You can think of [yield][yielddoc] as a way of "waiting one frame".
+[[Coroutines.start]] adds a couroutine to the collection. [[Coroutines.tick]]
+runs every coroutine in the collection up to their next [yield][yielddoc]
+statement. Each coroutine remembers the last [yield][yielddoc] they reached, and
+the next time [[Coroutines.tick]] is called they resume execution from that
+point.
 
 ```js
 import { Coroutines } from "ajeeb-coroutines"
@@ -25,28 +37,74 @@ import { Coroutines } from "ajeeb-coroutines"
 let coro = new Coroutines()
 
 coro.start(function* () {
-    console.log("hello")  // prints hello
-    yield;                // waits one frame
-    console.log("world")  // prints world
-    yield; yield;         // waits two frames
-    console.log("!!!")    // prints !!!
+    console.log("hello")    // prints "hello"
+    yield;                  // waits until next tick
+    console.log("world")  
+    console.log("how")      // prints "world" and "how"
+    yield; yield;           // waits for two ticks
+    console.log("are you?") // prints "are you?"
 })
 
 coro.tick()
 // prints "hello"
 coro.tick()
 // prints "world"
+// prints "how"
 coro.tick()
 // does nothing
 coro.tick()
-// prints "!!!"
+// prints "are you?"
 // further calls to coro.tick() will do nothing
 ```
 
 Coroutines are designed to run across multiple frames. [[tick]] can be scheduled
-to run regularly using [requestAnimationFrame][raf] or [setInterval][si] in the
-browser or node respectively, advancing every coroutine in the collection
-automatically once per frame.
+to run regularly [setInterval][si] or [requestAnimationFrame][raf] in a browser. 
+This advances every coroutine in the collection automatically once per frame.
+When scheduled like this, you can think of [yield][yielddoc] as a way of
+"waiting one frame".
+
+```js
+import { Coroutines } from "ajeeb-coroutines"
+
+let coro = new Coroutines()
+
+coro.start(function* () {
+    console.log("hello")    // prints "hello" and waits one frame
+    yield;
+    console.log("world")    // prints "world" and waits two frames
+    yield; yield;
+    console.log("how")      // prints "how" and waits three frames
+    yield; yield; yield;
+    console.log("are")      // prints "are" and waits four frames
+    yield; yield; yield; yield;
+    console.log("you?")     // prints "you?"
+})
+
+setInterval(() => coro.tick(), 1000 / 60) // tick 60 times a second
+```
+
+Generators are normal JavaScript functions. They have access to local variables,
+closures, arguments, and more. [yield][yielddoc] can appear anywhere.
+
+```js
+import { Coroutines } from "ajeeb-coroutines"
+
+let coro = new Coroutines()
+
+function* hello(repeat) {
+    console.log("hello")    // prints "hello" and waits one frame
+    yield;
+    for(let i=0; i<repeat; i++) { 
+        console.log("world")    // prints "world" and wait one frame
+        yield;                  // execution will resume from this point 
+    }
+    console.log("!")     // prints "!"
+}
+
+coro.start()
+
+setInterval(() => coro.tick(), 1000 / 60) // tick 60 times a second
+```
 
 This library also exports a number of generically useful coroutines, like [[wait]],
 that can be combined with your own in powerful ways. A coroutine can be made to

@@ -2416,44 +2416,90 @@ img {
 				<h1>Ajeeb Coroutines</h1>
 			</a>
 			<p>Unity-inspired Coroutines for the browser and nodejs.</p>
-			<p>Ajeeb Coroutines are a TypeScript implementation of <a href="https://docs.unity3d.com/Manual/Coroutines.html">a similar idea</a> from <a href="https://www.unity3d.com/">the Unity 3D engine</a>.
-				They use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator">ES6 generators</a> to turn code that <em>reads sequentially</em> into code that <em>runs across multiple frames</em>.
-			They were designed for the <a href="http://ajeeb.games">Ajeeb Game Engine</a> but have no dependencies and can be used anywhere.</p>
+			<p>Ajeeb Coroutines are a TypeScript implementation of <a href="https://docs.unity3d.com/Manual/Coroutines.html">a similar idea</a>
+				from <a href="https://www.unity3d.com/">the Unity 3D engine</a>. They use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator">ES6 generators</a> to turn
+				code that <em>reads sequentially</em> into code that <em>runs across multiple frames</em>.
+				They were designed for the <a href="http://ajeeb.games">Ajeeb Game Engine</a> but have no dependencies
+			and can be used anywhere.</p>
 			<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
 				<h2>Installation</h2>
 			</a>
-			<pre><code>npm <span class="hljs-keyword">install</span> nasser/ajeeb-coroutines</code></pre>
+			<pre><code>npm <span class="hljs-keyword">install</span> nasser/ajeeb-coroutines</code></pre><p>Or in a browser you can link to the CDN</p>
+			<pre><code><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"https://cdn.jsdelivr.net/gh/nasser/ajeeb-coroutines@master/build/coroutines.iife.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
 			<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 				<h2>Usage</h2>
 			</a>
-			<p>An instance of an ES6 generator is treated as <a href="https://en.wikipedia.org/wiki/Coroutine"><em>a coroutine</em></a>. An instance of the <a href="classes/coroutines.html">Coroutines</a> class schedules and runs coroutines.</p>
-			<p><a href="classes/coroutines.html#start">Coroutines.start</a> adds a couroutine to the collection. <a href="classes/coroutines.html#tick">Coroutines.tick</a> runs every coroutine in the collection up to their next <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a>
-			statement. You can think of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a> as a way of &quot;waiting one frame&quot;.</p>
+			<p>An instance of an ES6 generator is treated as <a href="https://en.wikipedia.org/wiki/Coroutine"><em>a coroutine</em></a>. An
+			instance of the <a href="classes/coroutines.html">Coroutines</a> class schedules and runs coroutines.</p>
+			<p><a href="classes/coroutines.html#start">Coroutines.start</a> adds a couroutine to the collection. <a href="classes/coroutines.html#tick">Coroutines.tick</a>
+				runs every coroutine in the collection up to their next <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a>
+				statement. Each coroutine remembers the last <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a> they reached, and
+				the next time <a href="classes/coroutines.html#tick">Coroutines.tick</a> is called they resume execution from that
+			point.</p>
 			<pre><code class="language-js"><span class="hljs-keyword">import</span> { Coroutines } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
 
 <span class="hljs-keyword">let</span> coro = <span class="hljs-keyword">new</span> Coroutines()
 
 coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"hello"</span>)  <span class="hljs-comment">// prints hello</span>
-    <span class="hljs-keyword">yield</span>;                <span class="hljs-comment">// waits one frame</span>
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"world"</span>)  <span class="hljs-comment">// prints world</span>
-    <span class="hljs-keyword">yield</span>; <span class="hljs-keyword">yield</span>;         <span class="hljs-comment">// waits two frames</span>
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"!!!"</span>)    <span class="hljs-comment">// prints world</span>
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"hello"</span>)    <span class="hljs-comment">// prints "hello"</span>
+    <span class="hljs-keyword">yield</span>;                  <span class="hljs-comment">// waits until next tick</span>
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"world"</span>)  
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"how"</span>)      <span class="hljs-comment">// prints "world" and "how"</span>
+    <span class="hljs-keyword">yield</span>; <span class="hljs-keyword">yield</span>;           <span class="hljs-comment">// waits for two ticks</span>
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"are you?"</span>) <span class="hljs-comment">// prints "are you?"</span>
 })
 
 coro.tick()
 <span class="hljs-comment">// prints "hello"</span>
 coro.tick()
 <span class="hljs-comment">// prints "world"</span>
+<span class="hljs-comment">// prints "how"</span>
 coro.tick()
 <span class="hljs-comment">// does nothing</span>
 coro.tick()
-<span class="hljs-comment">// prints "!!!"</span>
+<span class="hljs-comment">// prints "are you?"</span>
 <span class="hljs-comment">// further calls to coro.tick() will do nothing</span></code></pre>
 			<p>Coroutines are designed to run across multiple frames. <a href="classes/coroutines.html#tick">tick</a> can be scheduled
-				to run regularly using <a href="https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame">requestAnimationFrame</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval">setInterval</a> in the
-				browser or node respectively, advancing every coroutine in the collection
-			automatically once per frame.</p>
+				to run regularly <a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval">setInterval</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame">requestAnimationFrame</a> in a browser.
+				This advances every coroutine in the collection automatically once per frame.
+				When scheduled like this, you can think of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a> as a way of
+			&quot;waiting one frame&quot;.</p>
+			<pre><code class="language-js"><span class="hljs-keyword">import</span> { Coroutines } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
+
+<span class="hljs-keyword">let</span> coro = <span class="hljs-keyword">new</span> Coroutines()
+
+coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"hello"</span>)    <span class="hljs-comment">// prints "hello" and waits one frame</span>
+    <span class="hljs-keyword">yield</span>;
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"world"</span>)    <span class="hljs-comment">// prints "world" and waits two frames</span>
+    <span class="hljs-keyword">yield</span>; <span class="hljs-keyword">yield</span>;
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"how"</span>)      <span class="hljs-comment">// prints "how" and waits three frames</span>
+    <span class="hljs-keyword">yield</span>; <span class="hljs-keyword">yield</span>; <span class="hljs-keyword">yield</span>;
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"are"</span>)      <span class="hljs-comment">// prints "are" and waits four frames</span>
+    <span class="hljs-keyword">yield</span>; <span class="hljs-keyword">yield</span>; <span class="hljs-keyword">yield</span>; <span class="hljs-keyword">yield</span>;
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"you?"</span>)     <span class="hljs-comment">// prints "you?"</span>
+})
+
+setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> coro.tick(), <span class="hljs-number">1000</span> / <span class="hljs-number">60</span>) <span class="hljs-comment">// tick 60 times a second</span></code></pre>
+			<p>Generators are normal JavaScript functions. They have access to local variables,
+			closures, arguments, and more. <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a> can appear anywhere.</p>
+			<pre><code class="language-js"><span class="hljs-keyword">import</span> { Coroutines } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
+
+<span class="hljs-keyword">let</span> coro = <span class="hljs-keyword">new</span> Coroutines()
+
+<span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">hello</span>(<span class="hljs-params">repeat</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"hello"</span>)    <span class="hljs-comment">// prints "hello" and waits one frame</span>
+    <span class="hljs-keyword">yield</span>;
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i=<span class="hljs-number">0</span>; i&lt;repeat; i++) { 
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"world"</span>)    <span class="hljs-comment">// prints "world" and wait one frame</span>
+        <span class="hljs-keyword">yield</span>;                  <span class="hljs-comment">// execution will resume from this point </span>
+    }
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"!"</span>)     <span class="hljs-comment">// prints "!"</span>
+}
+
+coro.start()
+
+setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> coro.tick(), <span class="hljs-number">1000</span> / <span class="hljs-number">60</span>) <span class="hljs-comment">// tick 60 times a second</span></code></pre>
 			<p>This library also exports a number of generically useful coroutines, like <a href="globals.html#wait">wait</a>,
 				that can be combined with your own in powerful ways. A coroutine can be made to
 				wait for another coroutine with the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield*">yield*</a> statement. If
@@ -2557,7 +2603,7 @@ setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L240">coroutines.ts:240</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/454cbea/coroutines.ts#L240">coroutines.ts:240</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2585,7 +2631,7 @@ setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L222">coroutines.ts:222</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/454cbea/coroutines.ts#L222">coroutines.ts:222</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2613,7 +2659,7 @@ setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L204">coroutines.ts:204</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/454cbea/coroutines.ts#L204">coroutines.ts:204</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2644,7 +2690,7 @@ setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L176">coroutines.ts:176</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/454cbea/coroutines.ts#L176">coroutines.ts:176</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2698,7 +2744,7 @@ setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 											<li class="tsd-description">
 												<aside class="tsd-sources">
 													<ul>
-														<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L176">coroutines.ts:176</a></li>
+														<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/454cbea/coroutines.ts#L176">coroutines.ts:176</a></li>
 													</ul>
 												</aside>
 												<div class="tsd-comment tsd-typography">
@@ -2737,7 +2783,7 @@ setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 											<li class="tsd-description">
 												<aside class="tsd-sources">
 													<ul>
-														<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L176">coroutines.ts:176</a></li>
+														<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/454cbea/coroutines.ts#L176">coroutines.ts:176</a></li>
 													</ul>
 												</aside>
 												<div class="tsd-comment tsd-typography">
@@ -2772,7 +2818,7 @@ setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L111">coroutines.ts:111</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/454cbea/coroutines.ts#L111">coroutines.ts:111</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2814,7 +2860,7 @@ setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L125">coroutines.ts:125</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/454cbea/coroutines.ts#L125">coroutines.ts:125</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2845,7 +2891,7 @@ setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L138">coroutines.ts:138</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/454cbea/coroutines.ts#L138">coroutines.ts:138</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2888,7 +2934,7 @@ setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L151">coroutines.ts:151</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/454cbea/coroutines.ts#L151">coroutines.ts:151</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2934,7 +2980,7 @@ setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/7a3b2b6/coroutines.ts#L98">coroutines.ts:98</a></li>
+								<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/454cbea/coroutines.ts#L98">coroutines.ts:98</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
