@@ -198,8 +198,10 @@ let advance = (c:Iterator<any>) => c.next()
 let initialize = (c:(Iterator<any>|(()=>Iterator<any>))) => typeof c === "function" ? c() : c
 
 /**
+ * Returns a coroutine that waits for every coroutine of `coros` to complete.
+ * 
  * @category Combinator
- * @param coros Coroutines
+ * @param coros The coroutines to wait for
  */
 export function* waitLast(coros:Iterator<any>[]) {
     let results = coros.map(advance)
@@ -216,8 +218,10 @@ export function* waitLast(coros:Iterator<any>[]) {
   }
   
   /**
+   * Returns a coroutine that waits for the first coroutine of `coros` to complete.
+   * 
    * @category Combinator
-   * @param coros Coroutines
+   * @param coros The coroutines to wait for
    */
   export function* waitFirst(coros:Iterator<any>[]) {
     let results = coros.map(advance)
@@ -234,8 +238,10 @@ export function* waitLast(coros:Iterator<any>[]) {
   }
 
   /**
+   * Returns a coroutine that completes each coroutine in `coros` in turn
+   * 
    * @category Combinator
-   * @param coros Coroutines
+   * @param coros The coroutines to complete
    */
 export function* sequence(coros:(Iterator<any>|(()=>Iterator<any>))[]) {
     if(coros.length == 0) return;
