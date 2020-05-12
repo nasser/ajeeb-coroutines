@@ -101,7 +101,7 @@ function* hello(repeat) {
     console.log("!")     // prints "!"
 }
 
-coro.start()
+coro.start(hello)
 
 setInterval(() => coro.tick(), 1000 / 60) // tick 60 times a second
 ```
