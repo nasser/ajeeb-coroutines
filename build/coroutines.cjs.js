@@ -3,12 +3,12 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 /**
- * A container for running coroutines.
+ * A coroutine container.
  *
- * @remarks this might be renamed "Timeline" in the future
- *
+ * Coroutines are added to a schedule with [[start]] and all scheduled
+ * coroutines are advanced with [[tick]].
  */
-class Coroutines {
+class Schedule {
     constructor(name = generateNewName()) {
         this.coroutines = [];
         this.name = name;
@@ -22,9 +22,9 @@ class Coroutines {
      *
      * ```js
      * function* coroutineFunction() { ... }
-     * let coro = new Coroutines()
-     * coro.start(coroutineFunction()) // this works
-     * coro.start(coroutineFunction)   // so does this
+     * let schedule = new Schedule()
+     * schedule.start(coroutineFunction()) // this works
+     * schedule.start(coroutineFunction)   // so does this
      * ```
      *
      * @param coro coroutine to start
@@ -49,7 +49,7 @@ class Coroutines {
         this.coroutines = [];
     }
     /**
-     * Runs all scheduled coroutines once.
+     * Advances all scheduled coroutines once.
      *
      * Each coroutine added with [[start]] will run up to its next `yield` statement. Finished coroutines are removed
      * from the collection.
@@ -70,7 +70,7 @@ class Coroutines {
 /**
  * @hidden until typedoc can check "only exported" by default
  */
-let generateNewName = () => Math.random().toString(36).replace("0.", "Coroutines.");
+let generateNewName = () => Math.random().toString(36).replace("0.", "Schedule.");
 if (typeof window === "undefined") {
     global["performance"] = require("perf_hooks").performance;
 }
@@ -181,8 +181,10 @@ let advance = (c) => c.next();
  */
 let initialize = (c) => typeof c === "function" ? c() : c;
 /**
+ * Returns a coroutine that waits for every coroutine of `coros` to complete.
+ *
  * @category Combinator
- * @param coros Coroutines
+ * @param coros The coroutines to wait for
  */
 function* waitLast(coros) {
     let results = coros.map(advance);
@@ -198,8 +200,10 @@ function* waitLast(coros) {
     }
 }
 /**
+ * Returns a coroutine that waits for the first coroutine of `coros` to complete.
+ *
  * @category Combinator
- * @param coros Coroutines
+ * @param coros The coroutines to wait for
  */
 function* waitFirst(coros) {
     let results = coros.map(advance);
@@ -215,8 +219,10 @@ function* waitFirst(coros) {
     }
 }
 /**
+ * Returns a coroutine that completes each coroutine in `coros` in turn
+ *
  * @category Combinator
- * @param coros Coroutines
+ * @param coros The coroutines to complete
  */
 function* sequence(coros) {
     if (coros.length == 0)
@@ -232,7 +238,7 @@ function* sequence(coros) {
     }
 }
 
-exports.Coroutines = Coroutines;
+exports.Schedule = Schedule;
 exports.animate = animate;
 exports.sequence = sequence;
 exports.setClock = setClock;

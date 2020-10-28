@@ -1,11 +1,11 @@
 
 /**
- * A container for running coroutines.
+ * A coroutine container.
  * 
- * @remarks this might be renamed "Timeline" in the future  
- * 
+ * Coroutines are added to a schedule with [[start]] and all scheduled
+ * coroutines are advanced with [[tick]].
  */
-export class Coroutines {
+export class Schedule {
     private coroutines : Iterator<any>[] = []
     /**
      * For debugging
@@ -25,9 +25,9 @@ export class Coroutines {
      * 
      * ```js
      * function* coroutineFunction() { ... }
-     * let coro = new Coroutines()
-     * coro.start(coroutineFunction()) // this works
-     * coro.start(coroutineFunction)   // so does this
+     * let schedule = new Schedule()
+     * schedule.start(coroutineFunction()) // this works
+     * schedule.start(coroutineFunction)   // so does this
      * ```
      * 
      * @param coro coroutine to start
@@ -55,7 +55,7 @@ export class Coroutines {
     }
 
     /**
-     * Runs all scheduled coroutines once.
+     * Advances all scheduled coroutines once.
      * 
      * Each coroutine added with [[start]] will run up to its next `yield` statement. Finished coroutines are removed
      * from the collection.
@@ -76,7 +76,7 @@ export class Coroutines {
 /**
  * @hidden until typedoc can check "only exported" by default
  */
-let generateNewName = () => Math.random().toString(36).replace("0.", "Coroutines.")
+let generateNewName = () => Math.random().toString(36).replace("0.", "Schedule.")
 
 if(typeof window === "undefined") {
     global["performance"] = require("perf_hooks").performance;
