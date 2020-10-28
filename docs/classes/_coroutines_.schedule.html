@@ -127,7 +127,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/9ef34c7/coroutines.ts#L13">coroutines.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L13">coroutines.ts:13</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -149,7 +149,7 @@
 					<div class="tsd-signature tsd-kind-icon">coroutines<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/9ef34c7/coroutines.ts#L9">coroutines.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L9">coroutines.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -159,7 +159,7 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/9ef34c7/coroutines.ts#L13">coroutines.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L13">coroutines.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -181,7 +181,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/9ef34c7/coroutines.ts#L35">coroutines.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L35">coroutines.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -191,9 +191,9 @@
 								<p>Future calls to <a href="_coroutines_.schedule.html#tick">tick</a> will run <code>coro</code> up to its next <code>yield</code> until it is completed.</p>
 								<p>As a convenience if <code>coro</code> is a generator function and not a generator, it will be evaluated to produce a generator.</p>
 								<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">coroutineFunction</span>(<span class="hljs-params"></span>) </span>{ ... }
-<span class="hljs-keyword">let</span> coro = <span class="hljs-keyword">new</span> Coroutines()
-coro.start(coroutineFunction()) <span class="hljs-comment">// this works</span>
-coro.start(coroutineFunction)   <span class="hljs-comment">// so does this</span></code></pre>
+<span class="hljs-keyword">let</span> schedule = <span class="hljs-keyword">new</span> Schedule()
+schedule.start(coroutineFunction()) <span class="hljs-comment">// this works</span>
+schedule.start(coroutineFunction)   <span class="hljs-comment">// so does this</span></code></pre>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -218,7 +218,7 @@ coro.start(coroutineFunction)   <span class="hljs-comment">// so does this</span
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/9ef34c7/coroutines.ts#L46">coroutines.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L46">coroutines.ts:46</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -249,7 +249,7 @@ coro.start(coroutineFunction)   <span class="hljs-comment">// so does this</span
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/9ef34c7/coroutines.ts#L53">coroutines.ts:53</a></li>
+									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L53">coroutines.ts:53</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -271,12 +271,12 @@ coro.start(coroutineFunction)   <span class="hljs-comment">// so does this</span
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/9ef34c7/coroutines.ts#L63">coroutines.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L63">coroutines.ts:63</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Runs all scheduled coroutines once.</p>
+									<p>Advances all scheduled coroutines once.</p>
 								</div>
 								<p>Each coroutine added with <a href="_coroutines_.schedule.html#start">start</a> will run up to its next <code>yield</code> statement. Finished coroutines are removed
 								from the collection.</p>
@@ -343,13 +343,13 @@ coro.start(coroutineFunction)   <span class="hljs-comment">// so does this</span
 						<a href="../modules/_coroutines_.html#wait" class="tsd-kind-icon">wait</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_coroutines_.html#waitall" class="tsd-kind-icon">wait<wbr>All</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="../modules/_coroutines_.html#waitfirst" class="tsd-kind-icon">wait<wbr>First</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="../modules/_coroutines_.html#waitframes" class="tsd-kind-icon">wait<wbr>Frames</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="../modules/_coroutines_.html#waitlast" class="tsd-kind-icon">wait<wbr>Last</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="../modules/_coroutines_.html#waituntil" class="tsd-kind-icon">wait<wbr>Until</a>

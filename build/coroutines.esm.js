@@ -182,7 +182,7 @@ let initialize = (c) => typeof c === "function" ? c() : c;
  * @category Combinator
  * @param coros The coroutines to wait for
  */
-function* waitLast(coros) {
+function* waitAll(coros) {
     let results = coros.map(advance);
     while (results.filter(r => r.done).length !== coros.length) {
         yield;
@@ -234,5 +234,5 @@ function* sequence(coros) {
     }
 }
 
-export { Schedule, animate, sequence, setClock, wait, waitFirst, waitFrames, waitLast, waitUntil, waitWhile };
+export { Schedule, animate, sequence, setClock, wait, waitAll, waitFirst, waitFrames, waitUntil, waitWhile };
 //# sourceMappingURL=coroutines.esm.js.map

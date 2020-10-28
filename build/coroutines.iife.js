@@ -185,7 +185,7 @@ var coroutines = (function (exports) {
    * @category Combinator
    * @param coros The coroutines to wait for
    */
-  function* waitLast(coros) {
+  function* waitAll(coros) {
       let results = coros.map(advance);
       while (results.filter(r => r.done).length !== coros.length) {
           yield;
@@ -242,9 +242,9 @@ var coroutines = (function (exports) {
   exports.sequence = sequence;
   exports.setClock = setClock;
   exports.wait = wait;
+  exports.waitAll = waitAll;
   exports.waitFirst = waitFirst;
   exports.waitFrames = waitFrames;
-  exports.waitLast = waitLast;
   exports.waitUntil = waitUntil;
   exports.waitWhile = waitWhile;
 

@@ -203,7 +203,7 @@ let initialize = (c:(Iterator<any>|(()=>Iterator<any>))) => typeof c === "functi
  * @category Combinator
  * @param coros The coroutines to wait for
  */
-export function* waitLast(coros:Iterator<any>[]) {
+export function* waitAll(coros:Iterator<any>[]) {
     let results = coros.map(advance)
     while(results.filter(r => r.done).length !== coros.length) {
       yield;
