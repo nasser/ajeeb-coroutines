@@ -4,7 +4,7 @@ Unity-inspired Coroutines for the browser and nodejs.
 
 Ajeeb Coroutines are a TypeScript implementation of [a similar idea][unicoro]
 from [the Unity 3D engine][unity]. They use [ES6 generators][es6gen] to turn
-code that *reads sequentially* into code that *runs across multiple frames*.
+code that *reads synchronously* into code that *runs across multiple frames*.
 They were designed for the [Ajeeb Game Engine][ajeeb] but have no dependencies
 and can be used anywhere.
 
@@ -23,20 +23,20 @@ Or in a browser you can link to the CDN
 ## Usage
 
 An instance of an ES6 generator is treated as [*a coroutine*][wikicoro]. An
-instance of the [[Coroutines]] class schedules and runs coroutines.
+instance of the [[Schedule]] class schedules and runs coroutines.
 
-[[Coroutines.start]] adds a couroutine to the collection. [[Coroutines.tick]]
+[[Schedule.add]] adds a couroutine to the collection. [[Schedule.tick]]
 runs every coroutine in the collection up to their next [yield][yielddoc]
 statement. Each coroutine remembers the last [yield][yielddoc] they reached, and
-the next time [[Coroutines.tick]] is called they resume execution from that
+the next time [[Schedule.tick]] is called they resume execution from that
 point.
 
 ```js
-import { Coroutines } from "ajeeb-coroutines"
+import { Schedule } from "ajeeb-coroutines"
 
-let coro = new Coroutines()
+let sched = new Schedule()
 
-coro.start(function* () {
+sched.add(function* () {
     console.log("hello")    // prints "hello"
     yield;                  // waits until next tick
     console.log("world")  
@@ -45,16 +45,16 @@ coro.start(function* () {
     console.log("are you?") // prints "are you?"
 })
 
-coro.tick()
+sched.tick()
 // prints "hello"
-coro.tick()
+sched.tick()
 // prints "world"
 // prints "how"
-coro.tick()
+sched.tick()
 // does nothing
-coro.tick()
+sched.tick()
 // prints "are you?"
-// further calls to coro.tick() will do nothing
+// further calls to sched.tick() will do nothing
 ```
 
 Coroutines are designed to run across multiple frames. [[tick]] can be scheduled
@@ -64,11 +64,11 @@ When scheduled like this, you can think of [yield][yielddoc] as a way of
 "waiting one frame".
 
 ```js
-import { Coroutines } from "ajeeb-coroutines"
+import { Schedule } from "ajeeb-coroutines"
 
-let coro = new Coroutines()
+let sched = new Schedule()
 
-coro.start(function* () {
+sched.add(function* () {
     console.log("hello")    // prints "hello" and waits one frame
     yield;
     console.log("world")    // prints "world" and waits two frames
@@ -80,16 +80,16 @@ coro.start(function* () {
     console.log("you?")     // prints "you?"
 })
 
-setInterval(() => coro.tick(), 1000 / 60) // tick 60 times a second
+setInterval(() => sched.tick(), 1000 / 60) // tick 60 times a second
 ```
 
 Generators are normal JavaScript functions. They have access to local variables,
 closures, arguments, and more. [yield][yielddoc] can appear anywhere.
 
 ```js
-import { Coroutines } from "ajeeb-coroutines"
+import { Schedule } from "ajeeb-coroutines"
 
-let coro = new Coroutines()
+let sched = new Schedule()
 
 function* hello(repeat) {
     console.log("hello")    // prints "hello" and waits one frame
@@ -101,9 +101,9 @@ function* hello(repeat) {
     console.log("!")     // prints "!"
 }
 
-coro.start(hello)
+sched.add(hello)
 
-setInterval(() => coro.tick(), 1000 / 60) // tick 60 times a second
+setInterval(() => sched.tick(), 1000 / 60) // tick 60 times a second
 ```
 
 This library also exports a number of generically useful coroutines, like [[wait]],
@@ -113,23 +113,23 @@ wait for another coroutine with the [yield*][yieldstar] statement. If
 "wait until this other coroutine completes"
 
 ```js
-import { Coroutines, wait } from "ajeeb-coroutines"
+import { Schedule, wait } from "ajeeb-coroutines"
 
-let coro = new Coroutines()
+let sched = new Schedule()
 
 // schedule coroutines to tick every frame
 // in the browser
 function runCoroutines() {
     requestAnimationFrame( runCoroutines )
-    coro.tick()
+    sched.tick()
 }
 runCoroutines()
 
 // in node
-setInterval(() => coro.tick(), 1000/60)
+setInterval(() => sched.tick(), 1000/60)
 
-// you can start coroutines after 
-coro.start(function* () {
+// you can add coroutines afterwards
+sched.add(function* () {
     console.log("hello")  // prints "hello"
     yield* wait(2)        // wait for 2 seconds
     console.log("world")  // prints "world"
@@ -148,9 +148,9 @@ Coroutines can be treated as normal functions. They take arguments, and can be a
 
 ```js
 import fs from "fs"
-import { Coroutines, waitUntil } from "ajeeb-coroutines"
+import { Schedule, waitUntil } from "ajeeb-coroutines"
 
-let coro = new Coroutines()
+let sched = new Schedule()
 
 function* waitForFile(path) {
     console.log("waiting for", path);
@@ -158,17 +158,17 @@ function* waitForFile(path) {
     console.log("ok");
 }
 
-coro.start(waitForFile("nice.txt"))
+sched.add(waitForFile("nice.txt"))
 
 // in the browser
 function runCoroutines() {
     requestAnimationFrame( runCoroutines )
-    coro.tick()
+    sched.tick()
 }
 runCoroutines()
 
 // in node
-setInterval(() => coro.tick(), 1000/60)
+setInterval(() => sched.tick(), 1000/60)
 ```
 
 [es6gen]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator
