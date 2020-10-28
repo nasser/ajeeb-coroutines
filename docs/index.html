@@ -70,7 +70,7 @@
 				<p>Unity-inspired Coroutines for the browser and nodejs.</p>
 				<p>Ajeeb Coroutines are a TypeScript implementation of <a href="https://docs.unity3d.com/Manual/Coroutines.html">a similar idea</a>
 					from <a href="https://www.unity3d.com/">the Unity 3D engine</a>. They use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator">ES6 generators</a> to turn
-					code that <em>reads sequentially</em> into code that <em>runs across multiple frames</em>.
+					code that <em>reads synchronously</em> into code that <em>runs across multiple frames</em>.
 					They were designed for the <a href="http://ajeeb.games">Ajeeb Game Engine</a> but have no dependencies
 				and can be used anywhere.</p>
 				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
@@ -82,17 +82,17 @@
 					<h2>Usage</h2>
 				</a>
 				<p>An instance of an ES6 generator is treated as <a href="https://en.wikipedia.org/wiki/Coroutine"><em>a coroutine</em></a>. An
-				instance of the [[Coroutines]] class schedules and runs coroutines.</p>
-				<p>[[Coroutines.start]] adds a couroutine to the collection. [[Coroutines.tick]]
+				instance of the <a href="classes/_coroutines_.schedule.html">Schedule</a> class schedules and runs coroutines.</p>
+				<p><a href="classes/_coroutines_.schedule.html#add">Schedule.add</a> adds a couroutine to the collection. <a href="classes/_coroutines_.schedule.html#tick">Schedule.tick</a>
 					runs every coroutine in the collection up to their next <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a>
 					statement. Each coroutine remembers the last <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a> they reached, and
-					the next time [[Coroutines.tick]] is called they resume execution from that
+					the next time <a href="classes/_coroutines_.schedule.html#tick">Schedule.tick</a> is called they resume execution from that
 				point.</p>
-				<pre><code class="language-js"><span class="hljs-keyword">import</span> { Coroutines } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { Schedule } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
 
-<span class="hljs-keyword">let</span> coro = <span class="hljs-keyword">new</span> Coroutines()
+<span class="hljs-keyword">let</span> sched = <span class="hljs-keyword">new</span> Schedule()
 
-coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>{
+sched.add(<span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>{
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"hello"</span>)    <span class="hljs-comment">// prints "hello"</span>
     <span class="hljs-keyword">yield</span>;                  <span class="hljs-comment">// waits until next tick</span>
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"world"</span>)  
@@ -101,26 +101,26 @@ coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"are you?"</span>) <span class="hljs-comment">// prints "are you?"</span>
 })
 
-coro.tick()
+sched.tick()
 <span class="hljs-comment">// prints "hello"</span>
-coro.tick()
+sched.tick()
 <span class="hljs-comment">// prints "world"</span>
 <span class="hljs-comment">// prints "how"</span>
-coro.tick()
+sched.tick()
 <span class="hljs-comment">// does nothing</span>
-coro.tick()
+sched.tick()
 <span class="hljs-comment">// prints "are you?"</span>
-<span class="hljs-comment">// further calls to coro.tick() will do nothing</span></code></pre>
+<span class="hljs-comment">// further calls to sched.tick() will do nothing</span></code></pre>
 				<p>Coroutines are designed to run across multiple frames. <a href="classes/_coroutines_.schedule.html#tick">tick</a> can be scheduled
 					to run regularly <a href="https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval">setInterval</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame">requestAnimationFrame</a> in a browser.
 					This advances every coroutine in the collection automatically once per frame.
 					When scheduled like this, you can think of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a> as a way of
 				&quot;waiting one frame&quot;.</p>
-				<pre><code class="language-js"><span class="hljs-keyword">import</span> { Coroutines } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { Schedule } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
 
-<span class="hljs-keyword">let</span> coro = <span class="hljs-keyword">new</span> Coroutines()
+<span class="hljs-keyword">let</span> sched = <span class="hljs-keyword">new</span> Schedule()
 
-coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>{
+sched.add(<span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>{
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"hello"</span>)    <span class="hljs-comment">// prints "hello" and waits one frame</span>
     <span class="hljs-keyword">yield</span>;
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"world"</span>)    <span class="hljs-comment">// prints "world" and waits two frames</span>
@@ -132,12 +132,12 @@ coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"you?"</span>)     <span class="hljs-comment">// prints "you?"</span>
 })
 
-setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> coro.tick(), <span class="hljs-number">1000</span> / <span class="hljs-number">60</span>) <span class="hljs-comment">// tick 60 times a second</span></code></pre>
+setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> sched.tick(), <span class="hljs-number">1000</span> / <span class="hljs-number">60</span>) <span class="hljs-comment">// tick 60 times a second</span></code></pre>
 				<p>Generators are normal JavaScript functions. They have access to local variables,
 				closures, arguments, and more. <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a> can appear anywhere.</p>
-				<pre><code class="language-js"><span class="hljs-keyword">import</span> { Coroutines } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { Schedule } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
 
-<span class="hljs-keyword">let</span> coro = <span class="hljs-keyword">new</span> Coroutines()
+<span class="hljs-keyword">let</span> sched = <span class="hljs-keyword">new</span> Schedule()
 
 <span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">hello</span>(<span class="hljs-params">repeat</span>) </span>{
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"hello"</span>)    <span class="hljs-comment">// prints "hello" and waits one frame</span>
@@ -149,31 +149,31 @@ setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"!"</span>)     <span class="hljs-comment">// prints "!"</span>
 }
 
-coro.start(hello)
+sched.add(hello)
 
-setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> coro.tick(), <span class="hljs-number">1000</span> / <span class="hljs-number">60</span>) <span class="hljs-comment">// tick 60 times a second</span></code></pre>
+setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> sched.tick(), <span class="hljs-number">1000</span> / <span class="hljs-number">60</span>) <span class="hljs-comment">// tick 60 times a second</span></code></pre>
 				<p>This library also exports a number of generically useful coroutines, like <a href="modules/_coroutines_.html#wait">wait</a>,
 					that can be combined with your own in powerful ways. A coroutine can be made to
 					wait for another coroutine with the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield*">yield*</a> statement. If
 					<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield">yield</a> is read as &quot;wait one frame&quot; <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield*">yield*</a> is read as
 				&quot;wait until this other coroutine completes&quot;</p>
-				<pre><code class="language-js"><span class="hljs-keyword">import</span> { Coroutines, wait } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> { Schedule, wait } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
 
-<span class="hljs-keyword">let</span> coro = <span class="hljs-keyword">new</span> Coroutines()
+<span class="hljs-keyword">let</span> sched = <span class="hljs-keyword">new</span> Schedule()
 
 <span class="hljs-comment">// schedule coroutines to tick every frame</span>
 <span class="hljs-comment">// in the browser</span>
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">runCoroutines</span>(<span class="hljs-params"></span>) </span>{
     requestAnimationFrame( runCoroutines )
-    coro.tick()
+    sched.tick()
 }
 runCoroutines()
 
 <span class="hljs-comment">// in node</span>
-setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> coro.tick(), <span class="hljs-number">1000</span>/<span class="hljs-number">60</span>)
+setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> sched.tick(), <span class="hljs-number">1000</span>/<span class="hljs-number">60</span>)
 
-<span class="hljs-comment">// you can start coroutines after </span>
-coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>{
+<span class="hljs-comment">// you can add coroutines afterwards</span>
+sched.add(<span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>{
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"hello"</span>)  <span class="hljs-comment">// prints "hello"</span>
     <span class="hljs-keyword">yield</span>* wait(<span class="hljs-number">2</span>)        <span class="hljs-comment">// wait for 2 seconds</span>
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"world"</span>)  <span class="hljs-comment">// prints "world"</span>
@@ -188,9 +188,9 @@ coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span
 <span class="hljs-comment">// prints "!!!" </span></code></pre>
 				<p>Coroutines can be treated as normal functions. They take arguments, and can be as complex as needed.</p>
 				<pre><code class="language-js"><span class="hljs-keyword">import</span> fs <span class="hljs-keyword">from</span> <span class="hljs-string">"fs"</span>
-<span class="hljs-keyword">import</span> { Coroutines, waitUntil } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
+<span class="hljs-keyword">import</span> { Schedule, waitUntil } <span class="hljs-keyword">from</span> <span class="hljs-string">"ajeeb-coroutines"</span>
 
-<span class="hljs-keyword">let</span> coro = <span class="hljs-keyword">new</span> Coroutines()
+<span class="hljs-keyword">let</span> sched = <span class="hljs-keyword">new</span> Schedule()
 
 <span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">waitForFile</span>(<span class="hljs-params">path</span>) </span>{
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"waiting for"</span>, path);
@@ -198,17 +198,17 @@ coro.start(<span class="hljs-function"><span class="hljs-keyword">function</span
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"ok"</span>);
 }
 
-coro.start(waitForFile(<span class="hljs-string">"nice.txt"</span>))
+sched.add(waitForFile(<span class="hljs-string">"nice.txt"</span>))
 
 <span class="hljs-comment">// in the browser</span>
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">runCoroutines</span>(<span class="hljs-params"></span>) </span>{
     requestAnimationFrame( runCoroutines )
-    coro.tick()
+    sched.tick()
 }
 runCoroutines()
 
 <span class="hljs-comment">// in node</span>
-setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> coro.tick(), <span class="hljs-number">1000</span>/<span class="hljs-number">60</span>)</code></pre>
+setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> sched.tick(), <span class="hljs-number">1000</span>/<span class="hljs-number">60</span>)</code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

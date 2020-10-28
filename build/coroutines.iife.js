@@ -4,7 +4,7 @@ var coroutines = (function (exports) {
   /**
    * A coroutine container.
    *
-   * Coroutines are added to a schedule with [[start]] and all scheduled
+   * Coroutines are added to a schedule with [[add]] and all scheduled
    * coroutines are advanced with [[tick]].
    */
   class Schedule {
@@ -22,13 +22,13 @@ var coroutines = (function (exports) {
        * ```js
        * function* coroutineFunction() { ... }
        * let schedule = new Schedule()
-       * schedule.start(coroutineFunction()) // this works
-       * schedule.start(coroutineFunction)   // so does this
+       * schedule.add(coroutineFunction()) // this works
+       * schedule.add(coroutineFunction)   // so does this
        * ```
        *
-       * @param coro coroutine to start
+       * @param coro coroutine to add
        */
-      start(coro) {
+      add(coro) {
           let c = "next" in coro ? coro : coro();
           this.coroutines.push(c);
           return c;
@@ -36,21 +36,21 @@ var coroutines = (function (exports) {
       /**
        * Stops a single coroutine
        *
-       * @param coro coroutine to stop
+       * @param coro coroutine to remove
        */
-      stop(coro) {
+      remove(coro) {
           this.coroutines.splice(this.coroutines.indexOf(coro), 1);
       }
       /**
        * Discards all scheduled coroutines
        */
-      stopAll() {
+      removeAll() {
           this.coroutines = [];
       }
       /**
        * Advances all scheduled coroutines once.
        *
-       * Each coroutine added with [[start]] will run up to its next `yield` statement. Finished coroutines are removed
+       * Each coroutine added with [[add]] will run up to its next `yield` statement. Finished coroutines are removed
        * from the collection.
        */
       tick() {

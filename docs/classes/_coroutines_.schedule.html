@@ -74,7 +74,7 @@
 					<div class="lead">
 						<p>A coroutine container.</p>
 					</div>
-					<p>Coroutines are added to a schedule with <a href="_coroutines_.schedule.html#start">start</a> and all scheduled
+					<p>Coroutines are added to a schedule with <a href="_coroutines_.schedule.html#add">add</a> and all scheduled
 					coroutines are advanced with <a href="_coroutines_.schedule.html#tick">tick</a>.</p>
 				</div>
 			</section>
@@ -106,9 +106,9 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_coroutines_.schedule.html#start" class="tsd-kind-icon">start</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_coroutines_.schedule.html#stop" class="tsd-kind-icon">stop</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_coroutines_.schedule.html#stopall" class="tsd-kind-icon">stop<wbr>All</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_coroutines_.schedule.html#add" class="tsd-kind-icon">add</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_coroutines_.schedule.html#remove" class="tsd-kind-icon">remove</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_coroutines_.schedule.html#removeall" class="tsd-kind-icon">remove<wbr>All</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_coroutines_.schedule.html#tick" class="tsd-kind-icon">tick</a></li>
 							</ul>
 						</section>
@@ -127,7 +127,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L13">coroutines.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/68debef/coroutines.ts#L13">coroutines.ts:13</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -149,7 +149,7 @@
 					<div class="tsd-signature tsd-kind-icon">coroutines<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L9">coroutines.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/68debef/coroutines.ts#L9">coroutines.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -159,7 +159,7 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L13">coroutines.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/68debef/coroutines.ts#L13">coroutines.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -172,16 +172,16 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="start" class="tsd-anchor"></a>
-					<h3>start</h3>
+					<a name="add" class="tsd-anchor"></a>
+					<h3>add</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">start<span class="tsd-signature-symbol">(</span>coro<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>coro<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L35">coroutines.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/68debef/coroutines.ts#L35">coroutines.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -192,15 +192,15 @@
 								<p>As a convenience if <code>coro</code> is a generator function and not a generator, it will be evaluated to produce a generator.</p>
 								<pre><code class="language-js"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">coroutineFunction</span>(<span class="hljs-params"></span>) </span>{ ... }
 <span class="hljs-keyword">let</span> schedule = <span class="hljs-keyword">new</span> Schedule()
-schedule.start(coroutineFunction()) <span class="hljs-comment">// this works</span>
-schedule.start(coroutineFunction)   <span class="hljs-comment">// so does this</span></code></pre>
+schedule.add(coroutineFunction()) <span class="hljs-comment">// this works</span>
+schedule.add(coroutineFunction)   <span class="hljs-comment">// so does this</span></code></pre>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>coro: <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>coroutine to start</p>
+										<p>coroutine to add</p>
 									</div>
 								</li>
 							</ul>
@@ -209,16 +209,16 @@ schedule.start(coroutineFunction)   <span class="hljs-comment">// so does this</
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="stop" class="tsd-anchor"></a>
-					<h3>stop</h3>
+					<a name="remove" class="tsd-anchor"></a>
+					<h3>remove</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">stop<span class="tsd-signature-symbol">(</span>coro<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">remove<span class="tsd-signature-symbol">(</span>coro<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L46">coroutines.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/68debef/coroutines.ts#L46">coroutines.ts:46</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -231,7 +231,7 @@ schedule.start(coroutineFunction)   <span class="hljs-comment">// so does this</
 								<li>
 									<h5>coro: <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>coroutine to stop</p>
+										<p>coroutine to remove</p>
 									</div>
 								</li>
 							</ul>
@@ -240,16 +240,16 @@ schedule.start(coroutineFunction)   <span class="hljs-comment">// so does this</
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="stopall" class="tsd-anchor"></a>
-					<h3>stop<wbr>All</h3>
+					<a name="removeall" class="tsd-anchor"></a>
+					<h3>remove<wbr>All</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">stop<wbr>All<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>All<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L53">coroutines.ts:53</a></li>
+									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/68debef/coroutines.ts#L53">coroutines.ts:53</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -271,14 +271,14 @@ schedule.start(coroutineFunction)   <span class="hljs-comment">// so does this</
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/afa6cb1/coroutines.ts#L63">coroutines.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/nasser/ajeeb-coroutines/blob/68debef/coroutines.ts#L63">coroutines.ts:63</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Advances all scheduled coroutines once.</p>
 								</div>
-								<p>Each coroutine added with <a href="_coroutines_.schedule.html#start">start</a> will run up to its next <code>yield</code> statement. Finished coroutines are removed
+								<p>Each coroutine added with <a href="_coroutines_.schedule.html#add">add</a> will run up to its next <code>yield</code> statement. Finished coroutines are removed
 								from the collection.</p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -315,13 +315,13 @@ schedule.start(coroutineFunction)   <span class="hljs-comment">// so does this</
 								<a href="_coroutines_.schedule.html#name" class="tsd-kind-icon">name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_coroutines_.schedule.html#start" class="tsd-kind-icon">start</a>
+								<a href="_coroutines_.schedule.html#add" class="tsd-kind-icon">add</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_coroutines_.schedule.html#stop" class="tsd-kind-icon">stop</a>
+								<a href="_coroutines_.schedule.html#remove" class="tsd-kind-icon">remove</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_coroutines_.schedule.html#stopall" class="tsd-kind-icon">stop<wbr>All</a>
+								<a href="_coroutines_.schedule.html#removeall" class="tsd-kind-icon">remove<wbr>All</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_coroutines_.schedule.html#tick" class="tsd-kind-icon">tick</a>
