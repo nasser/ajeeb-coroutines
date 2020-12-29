@@ -205,16 +205,14 @@ var coroutines = (function (exports) {
    * @param coros The coroutines to wait for
    */
   function* waitFirst(coros) {
-      let results = coros.map(advance);
-      while (results.filter(r => r.done).length === 0) {
-          yield;
-          for (var i = 0; i < coros.length; i++) {
-              let coro = coros[i];
-              let res = results[i];
-              if (!res.done) {
-                  results[i] = advance(coro);
-              }
+      coros = coros.map(initialize);
+      while (true) {
+          for (const c of coros) {
+              let res = c.next();
+              if (res.done)
+                  return res.value;
           }
+          yield;
       }
   }
   /**
@@ -247,6 +245,8 @@ var coroutines = (function (exports) {
   exports.waitFrames = waitFrames;
   exports.waitUntil = waitUntil;
   exports.waitWhile = waitWhile;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
 
   return exports;
 
