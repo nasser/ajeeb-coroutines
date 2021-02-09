@@ -7,7 +7,7 @@
   "module": "build/coroutines.esm.js",
   "scripts": {
     "build": "npx tsc & rollup -c",
-    "build-docs": "npx typedoc --mode file --theme minimal"
+    "build-docs": "typedoc --mode file --theme minimal"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,6 @@
     "@types/node": "^12.7.1",
     "typescript": "~3.5.3",
     "tslib": "1.10.0",
-    "typedoc": "~0.15.0",
     "rollup": "^1.19.4",
     "rollup-plugin-typescript": "1.0.1",
     "rollup-plugin-sourcemaps": "0.4.2"
