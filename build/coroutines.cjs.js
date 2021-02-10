@@ -67,16 +67,10 @@ class Schedule {
         }
     }
 }
-/**
- * @hidden until typedoc can check "only exported" by default
- */
 let generateNewName = () => Math.random().toString(36).replace("0.", "Schedule.");
 if (typeof window === "undefined") {
     global["performance"] = require("perf_hooks").performance;
 }
-/**
- * @hidden until typedoc can check "only exported" by default
- */
 let _clock = () => performance.now() / 1000;
 /**
  * Sets a new clock function.
@@ -140,45 +134,39 @@ function* waitWhile(f) {
         yield;
     }
 }
-/**
- * Animate a parameter.
- *
- * @category Coroutine
- *
- *
- * @param obj The object to mutate
- * @param prop The property on `obj` to mutate
- * @param to The final value of `obj.prop`
- * @param map A function to shape the animation curve. Given a value between 0 and 1 returns a value between 0 and 1. Defaults to the identity function (no shaping).
- * @param map.x A value between 0 and 1
- * @param clock The clock function used to measure time. Defaults to the function set by [[setClock]]
- * @param interpolate Interpolating function. Given values `a` and `b` returns their interpolated value at `t`, a number between 0 and 1. Defaults to linear interpolation.
- * @param interpolate.a The starting value
- * @param interpolate.b The final value
- * @param interpolate.t The interpolation value, a number between 0 and 1
- * @todo needs way to specify animation speed or time
- * @see [[setClock]]
- */
-function* animate(obj, prop, to, { clock = _clock, map = (x) => x, interpolate = (a, b, t) => b * t + a * (1 - t) }) {
-    let from = obj[prop];
-    let t = 0;
-    let lastTime = clock();
-    while (t < 1) {
-        let nowTime = clock();
-        let delta = nowTime - lastTime;
-        lastTime = nowTime;
-        obj[prop] = interpolate(from, to, map(t));
-        t += delta;
-        yield;
-    }
-}
-/**
- * @hidden
- */
+// /**
+//  * Animate a parameter.
+//  * 
+//  * @category Coroutine
+//  * 
+//  * 
+//  * @param obj The object to mutate
+//  * @param prop The property on `obj` to mutate
+//  * @param to The final value of `obj.prop`
+//  * @param map A function to shape the animation curve. Given a value between 0 and 1 returns a value between 0 and 1. Defaults to the identity function (no shaping).
+//  * @param map.x A value between 0 and 1
+//  * @param clock The clock function used to measure time. Defaults to the function set by [[setClock]]
+//  * @param interpolate Interpolating function. Given values `a` and `b` returns their interpolated value at `t`, a number between 0 and 1. Defaults to linear interpolation.
+//  * @param interpolate.a The starting value
+//  * @param interpolate.b The final value
+//  * @param interpolate.t The interpolation value, a number between 0 and 1
+//  * @todo needs way to specify animation speed or time
+//  * @see [[setClock]]
+//  */
+// export function* animate(obj: any, prop: string, to:any, { clock = _clock, map = (x:number) => x, interpolate = (a:any, b:any, t:number) => b * t + a * (1 - t) } ) {
+//     let from = obj[prop];
+//     let t = 0
+//     let lastTime = clock()
+//     while(t < 1) {
+//         let nowTime = clock()
+//         let delta = nowTime - lastTime
+//         lastTime = nowTime
+//         obj[prop] = interpolate(from, to, map(t))
+//         t += delta
+//         yield;
+//     }
+// }
 let advance = (c) => c.next();
-/**
- * @hidden
- */
 let initialize = (c) => typeof c === "function" ? c() : c;
 /**
  * Returns a coroutine that waits for every coroutine of `coros` to complete.
@@ -216,29 +204,19 @@ function* waitFirst(coros) {
         yield;
     }
 }
-/**
- * Returns a coroutine that completes each coroutine in `coros` in turn
- *
- * @category Combinator
- * @param coros The coroutines to complete
- */
-function* sequence(coros) {
-    if (coros.length == 0)
-        return;
-    for (let i = 0; i < coros.length; i++) {
-        const gen = initialize(coros[i]);
-        let res = gen.next();
-        yield;
-        while (!res.done) {
-            res = gen.next();
-            yield;
-        }
-    }
-}
+//   /**
+//    * Returns a coroutine that completes each coroutine in `coros` in turn
+//    * 
+//    * @category Combinator
+//    * @param coros The coroutines to complete
+//    */
+// export function* sequence(coros:(Generator<any>|(()=>Generator<any>))[]) {
+//     for (const coro of coros) {
+//         yield* initialize(coro)
+//     }
+//   }
 
 exports.Schedule = Schedule;
-exports.animate = animate;
-exports.sequence = sequence;
 exports.setClock = setClock;
 exports.wait = wait;
 exports.waitAll = waitAll;

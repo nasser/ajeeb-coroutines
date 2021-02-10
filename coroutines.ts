@@ -1,17 +1,33 @@
 
 /**
- * A coroutine container.
+ * A Coroutine is a regular [ES6 Generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator)
+ * returned by a [generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
+ * 
+ * ```typescript
+ * function* simpleCoroutine() {
+ *   console.log('hello')
+ *   yield
+ *   console.log('world')
+ * }
+ * 
+ * let coro : Coroutine = simpleCoroutine()
+ * ```
+ */
+export type Coroutine = Generator<any>
+
+/**
+ * A coroutine schedule.
  * 
  * Coroutines are added to a schedule with [[add]] and all scheduled
  * coroutines are advanced with [[tick]].
  */
 export class Schedule {
-    private coroutines : Iterator<any>[] = []
+    private coroutines: Coroutine[] = []
     /**
      * For debugging
      */
-    public readonly name : string;
-    
+    public readonly name: string;
+
     constructor(name = generateNewName()) {
         this.name = name;
     }
@@ -32,7 +48,7 @@ export class Schedule {
      * 
      * @param coro coroutine to add
      */
-    public add(coro:Iterator<any>|(()=>Iterator<any>)) {
+    public add(coro: Coroutine | (() => Coroutine)) {
         let c = "next" in coro ? coro : coro();
         this.coroutines.push(c)
         return c
@@ -43,7 +59,7 @@ export class Schedule {
      * 
      * @param coro coroutine to remove
      */
-    public remove(coro: Iterator<any>) {
+    public remove(coro: Coroutine) {
         this.coroutines.splice(this.coroutines.indexOf(coro), 1)
     }
 
@@ -62,29 +78,24 @@ export class Schedule {
      */
     public tick() {
         let toRemove = []
-        for(const coro of this.coroutines) {
+        for (const coro of this.coroutines) {
             let result = coro.next()
-            if(result.done) {
+            if (result.done) {
                 toRemove.push(coro)
             }
-      }
-      for (const x of toRemove) {
-        this.coroutines.splice(this.coroutines.indexOf(x), 1)
-      }
+        }
+        for (const x of toRemove) {
+            this.coroutines.splice(this.coroutines.indexOf(x), 1)
+        }
     }
 }
-/**
- * @hidden until typedoc can check "only exported" by default
- */
+
 let generateNewName = () => Math.random().toString(36).replace("0.", "Schedule.")
 
-if(typeof window === "undefined") {
+if (typeof window === "undefined") {
     global["performance"] = require("perf_hooks").performance;
 }
 
-/**
- * @hidden until typedoc can check "only exported" by default
- */
 let _clock = () => performance.now() / 1000
 
 /**
@@ -108,7 +119,7 @@ export function setClock(f: () => number) {
  * @param clock A function that returns the elapsed application time in seconds, defaults to the function assigned by [[setClock]]
  * @see [[setClock]]
  */
-export function* wait(seconds: number, clock = _clock) {
+export function* wait(seconds: number, clock = _clock): Coroutine {
     let startTime = clock()
     while (clock() - startTime < seconds) {
         yield;
@@ -122,7 +133,7 @@ export function* wait(seconds: number, clock = _clock) {
  * 
  * @param n How many frames to wait
  */
-export function* waitFrames(n: number) {
+export function* waitFrames(n: number): Coroutine {
     while (n-- > 0) {
         yield;
     }
@@ -135,8 +146,8 @@ export function* waitFrames(n: number) {
  * 
  * @param f A function to execute every frame. When `f` returns truthy this coroutine completes.
  */
-export function* waitUntil(f: () => boolean) {
-    while(!f()) {
+export function* waitUntil(f: () => boolean): Coroutine {
+    while (!f()) {
         yield;
     }
 }
@@ -148,54 +159,15 @@ export function* waitUntil(f: () => boolean) {
  * 
  * @param f A function to execute every frame. When `f` returns falsey this coroutine completes.
  */
-export function* waitWhile(f: () => boolean) {
-    while(f()) {
+export function* waitWhile(f: () => boolean): Coroutine {
+    while (f()) {
         yield;
     }
 }
 
-/**
- * Animate a parameter.
- * 
- * @category Coroutine
- * 
- * 
- * @param obj The object to mutate
- * @param prop The property on `obj` to mutate
- * @param to The final value of `obj.prop`
- * @param map A function to shape the animation curve. Given a value between 0 and 1 returns a value between 0 and 1. Defaults to the identity function (no shaping).
- * @param map.x A value between 0 and 1
- * @param clock The clock function used to measure time. Defaults to the function set by [[setClock]]
- * @param interpolate Interpolating function. Given values `a` and `b` returns their interpolated value at `t`, a number between 0 and 1. Defaults to linear interpolation.
- * @param interpolate.a The starting value
- * @param interpolate.b The final value
- * @param interpolate.t The interpolation value, a number between 0 and 1
- * @todo needs way to specify animation speed or time
- * @see [[setClock]]
- */
-export function* animate(obj: any, prop: string, to:any, { clock = _clock, map = (x:number) => x, interpolate = (a:any, b:any, t:number) => b * t + a * (1 - t) } ) {
-    let from = obj[prop];
-    let t = 0
-    let lastTime = clock()
-    while(t < 1) {
-        let nowTime = clock()
-        let delta = nowTime - lastTime
-        lastTime = nowTime
-        obj[prop] = interpolate(from, to, map(t))
-        t += delta
-        yield;
-    }
-}
+let advance = (c: Coroutine) => c.next()
 
-/**
- * @hidden
- */
-let advance = (c:Iterator<any>) => c.next()
-
-/**
- * @hidden
- */
-let initialize = (c:(Iterator<any>|(()=>Iterator<any>))) => typeof c === "function" ? c() : c
+let initialize = (c: Coroutine | (() => Coroutine)) => typeof c === "function" ? c() : c
 
 /**
  * Returns a coroutine that waits for every coroutine of `coros` to complete.
@@ -203,53 +175,35 @@ let initialize = (c:(Iterator<any>|(()=>Iterator<any>))) => typeof c === "functi
  * @category Combinator
  * @param coros The coroutines to wait for
  */
-export function* waitAll(coros:Iterator<any>[]) {
+export function* waitAll(coros: Coroutine[]): Coroutine {
     let results = coros.map(advance)
-    while(results.filter(r => r.done).length !== coros.length) {
-      yield;
-      for (var i = 0; i < coros.length; i++) {
-        let coro = coros[i]
-        let res = results[i]
-        if(!res.done) {
-          results[i] = advance(coro)
+    while (results.filter(r => r.done).length !== coros.length) {
+        yield;
+        for (var i = 0; i < coros.length; i++) {
+            let coro = coros[i]
+            let res = results[i]
+            if (!res.done) {
+                results[i] = advance(coro)
+            }
         }
-      }
     }
-  }
-  
-  /**
-   * Returns a coroutine that waits for the first coroutine of `coros` to complete.
-   * 
-   * @category Combinator
-   * @param coros The coroutines to wait for
-   */
-  export function* waitFirst(coros:Iterator<any>[]) {
+}
+
+/**
+ * Returns a coroutine that waits for the first coroutine of `coros` to complete.
+ * 
+ * @category Combinator
+ * @param coros The coroutines to wait for
+ * @returns When complete, returns the value returned by the first completed coroutine in `coros`.
+ */
+export function* waitFirst(coros: Coroutine[]): Coroutine {
     coros = coros.map(initialize)
-    while(true) {
+    while (true) {
         for (const c of coros) {
             let res = c.next()
-            if(res.done)
+            if (res.done)
                 return res.value;
         }
         yield
     }
-  }
-
-  /**
-   * Returns a coroutine that completes each coroutine in `coros` in turn
-   * 
-   * @category Combinator
-   * @param coros The coroutines to complete
-   */
-export function* sequence(coros:(Iterator<any>|(()=>Iterator<any>))[]) {
-    if(coros.length == 0) return;
-    for (let i = 0; i < coros.length; i++) {
-        const gen = initialize(coros[i]);
-        let res = gen.next()
-        yield;
-        while(!res.done) {
-            res = gen.next()
-            yield;
-        }
-    }
-  }
+}

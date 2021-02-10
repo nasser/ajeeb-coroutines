@@ -14,10 +14,18 @@ and can be used anywhere.
 npm install nasser/ajeeb-coroutines
 ```
 
-Or in a browser you can link to the CDN
+Or in a browser you can link to the CDN, using either legacy script tags
 
-```
+```html
 <script src="https://cdn.jsdelivr.net/gh/nasser/ajeeb-coroutines@master/build/coroutines.iife.js"></script>
+```
+
+or ES6 modules
+
+```html
+<script type="module">
+import * as coro from "https://cdn.jsdelivr.net/gh/nasser/ajeeb-coroutines@master/build/coroutines.esm.js"
+</script>
 ```
 
 ## Usage
