@@ -16,6 +16,23 @@
 export type Coroutine = Generator<any>
 
 /**
+ * Some functions accept either a [[Coroutine]] or a function that can be called
+ * with no arguments to produce a [[Coroutine]]. This enables passing `function*`
+ * in addition to instantiated [[Coroutine]]s.
+ * 
+ * ```js
+ * function* namedCoroutine() { ... }
+ * const sched = new coro.Schedule()
+ * // invoking namedCoroutine produces a Coroutine instance
+ * sched.add(namedCoroutine())
+ * // function* literal is not a Coroutine instance, but can
+ * // be invoked to produce one. It is a CoroutineOrFunction.
+ * sched.add(function* () { ... })
+ * ```
+ */
+export type CoroutineOrFunction = Coroutine | ((...any) => Coroutine)
+
+/**
  * A coroutine schedule.
  * 
  * Coroutines are added to a schedule with [[add]] and all scheduled
@@ -48,7 +65,7 @@ export class Schedule {
      * 
      * @param coro coroutine to add
      */
-    public add(coro: Coroutine | (() => Coroutine)) {
+    public add(coro: CoroutineOrFunction) {
         let c = "next" in coro ? coro : coro();
         this.coroutines.push(c)
         return c
@@ -146,7 +163,7 @@ export function* waitFrames(n: number): Coroutine {
  * 
  * @param f A function to execute every frame. When `f` returns truthy this coroutine completes.
  */
-export function* waitUntil(f: () => boolean): Coroutine {
+export function* waitUntil(f: (...any) => boolean): Coroutine {
     while (!f()) {
         yield;
     }
@@ -159,7 +176,7 @@ export function* waitUntil(f: () => boolean): Coroutine {
  * 
  * @param f A function to execute every frame. When `f` returns falsey this coroutine completes.
  */
-export function* waitWhile(f: () => boolean): Coroutine {
+export function* waitWhile(f: (...any) => boolean): Coroutine {
     while (f()) {
         yield;
     }
@@ -167,7 +184,7 @@ export function* waitWhile(f: () => boolean): Coroutine {
 
 let advance = (c: Coroutine) => c.next()
 
-let initialize = (c: Coroutine | (() => Coroutine)) => typeof c === "function" ? c() : c
+let initialize = (c: CoroutineOrFunction) => typeof c === "function" ? c() : c
 
 /**
  * Returns a coroutine that waits for every coroutine of `coros` to complete.
@@ -175,12 +192,13 @@ let initialize = (c: Coroutine | (() => Coroutine)) => typeof c === "function" ?
  * @category Combinator
  * @param coros The coroutines to wait for
  */
-export function* waitAll(coros: Coroutine[]): Coroutine {
-    let results = coros.map(advance)
-    while (results.filter(r => r.done).length !== coros.length) {
+export function* waitAll(coros: CoroutineOrFunction[]): Coroutine {
+    let coros_ = coros.map(initialize)
+    let results = coros_.map(advance)
+    while (results.filter(r => r.done).length !== coros_.length) {
         yield;
-        for (var i = 0; i < coros.length; i++) {
-            let coro = coros[i]
+        for (var i = 0; i < coros_.length; i++) {
+            let coro = coros_[i]
             let res = results[i]
             if (!res.done) {
                 results[i] = advance(coro)
@@ -196,10 +214,10 @@ export function* waitAll(coros: Coroutine[]): Coroutine {
  * @param coros The coroutines to wait for
  * @returns When complete, returns the value returned by the first completed coroutine in `coros`.
  */
-export function* waitFirst(coros: Coroutine[]): Coroutine {
-    coros = coros.map(initialize)
+export function* waitFirst(coros: CoroutineOrFunction[]): Coroutine {
+    let coros_ = coros.map(initialize)
     while (true) {
-        for (const c of coros) {
+        for (const c of coros_) {
             let res = c.next()
             if (res.done)
                 return res.value;

@@ -1,5 +1,5 @@
 /**
- * A coroutine container.
+ * A coroutine schedule.
  *
  * Coroutines are added to a schedule with [[add]] and all scheduled
  * coroutines are advanced with [[tick]].
@@ -130,38 +130,6 @@ function* waitWhile(f) {
         yield;
     }
 }
-// /**
-//  * Animate a parameter.
-//  * 
-//  * @category Coroutine
-//  * 
-//  * 
-//  * @param obj The object to mutate
-//  * @param prop The property on `obj` to mutate
-//  * @param to The final value of `obj.prop`
-//  * @param map A function to shape the animation curve. Given a value between 0 and 1 returns a value between 0 and 1. Defaults to the identity function (no shaping).
-//  * @param map.x A value between 0 and 1
-//  * @param clock The clock function used to measure time. Defaults to the function set by [[setClock]]
-//  * @param interpolate Interpolating function. Given values `a` and `b` returns their interpolated value at `t`, a number between 0 and 1. Defaults to linear interpolation.
-//  * @param interpolate.a The starting value
-//  * @param interpolate.b The final value
-//  * @param interpolate.t The interpolation value, a number between 0 and 1
-//  * @todo needs way to specify animation speed or time
-//  * @see [[setClock]]
-//  */
-// export function* animate(obj: any, prop: string, to:any, { clock = _clock, map = (x:number) => x, interpolate = (a:any, b:any, t:number) => b * t + a * (1 - t) } ) {
-//     let from = obj[prop];
-//     let t = 0
-//     let lastTime = clock()
-//     while(t < 1) {
-//         let nowTime = clock()
-//         let delta = nowTime - lastTime
-//         lastTime = nowTime
-//         obj[prop] = interpolate(from, to, map(t))
-//         t += delta
-//         yield;
-//     }
-// }
 let advance = (c) => c.next();
 let initialize = (c) => typeof c === "function" ? c() : c;
 /**
@@ -171,11 +139,12 @@ let initialize = (c) => typeof c === "function" ? c() : c;
  * @param coros The coroutines to wait for
  */
 function* waitAll(coros) {
-    let results = coros.map(advance);
-    while (results.filter(r => r.done).length !== coros.length) {
+    let coros_ = coros.map(initialize);
+    let results = coros_.map(advance);
+    while (results.filter(r => r.done).length !== coros_.length) {
         yield;
-        for (var i = 0; i < coros.length; i++) {
-            let coro = coros[i];
+        for (var i = 0; i < coros_.length; i++) {
+            let coro = coros_[i];
             let res = results[i];
             if (!res.done) {
                 results[i] = advance(coro);
@@ -188,11 +157,12 @@ function* waitAll(coros) {
  *
  * @category Combinator
  * @param coros The coroutines to wait for
+ * @returns When complete, returns the value returned by the first completed coroutine in `coros`.
  */
 function* waitFirst(coros) {
-    coros = coros.map(initialize);
+    let coros_ = coros.map(initialize);
     while (true) {
-        for (const c of coros) {
+        for (const c of coros_) {
             let res = c.next();
             if (res.done)
                 return res.value;
@@ -200,17 +170,6 @@ function* waitFirst(coros) {
         yield;
     }
 }
-//   /**
-//    * Returns a coroutine that completes each coroutine in `coros` in turn
-//    * 
-//    * @category Combinator
-//    * @param coros The coroutines to complete
-//    */
-// export function* sequence(coros:(Generator<any>|(()=>Generator<any>))[]) {
-//     for (const coro of coros) {
-//         yield* initialize(coro)
-//     }
-//   }
 
 export { Schedule, setClock, wait, waitAll, waitFirst, waitFrames, waitUntil, waitWhile };
 //# sourceMappingURL=coroutines.esm.js.map
