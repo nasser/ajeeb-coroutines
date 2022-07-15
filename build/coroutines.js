@@ -68,10 +68,7 @@ class Schedule {
 }
 exports.Schedule = Schedule;
 let generateNewName = () => Math.random().toString(36).replace("0.", "Schedule.");
-if (typeof window === "undefined") {
-    global["performance"] = require("perf_hooks").performance;
-}
-let _clock = () => performance.now() / 1000;
+let _clock = () => Date.now() / 1000;
 /**
  * Sets a new clock function.
  *

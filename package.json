@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "description": "A couroutine implementation based on ES6 generators",
   "main": "build/coroutines.cjs.js",
-  "browser": "build/coroutines.iife.js",
   "module": "build/coroutines.esm.js",
   "scripts": {
     "test": "jest",
