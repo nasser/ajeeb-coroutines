@@ -2,6 +2,8 @@
 
 Unity-inspired Coroutines for the browser and nodejs.
 
+**All work has moved to the monorepo on sourcehut: https://git.sr.ht/~nasser/ajeeb**
+
 Ajeeb Coroutines are a TypeScript implementation of [a similar idea][unicoro]
 from [the Unity 3D engine][unity]. They use [ES6 generators][es6gen] to turn
 code that *reads synchronously* into code that *runs across multiple frames*.
